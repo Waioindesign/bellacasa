@@ -1,64 +1,13 @@
 /**
  * Bella Casa — landing de conversão para o grupo de ofertas no WhatsApp.
  *
- * CONFIGURAÇÃO (edite apenas este bloco):
- * - WHATSAPP_GROUP_URL: cole o link completo do grupo
- * - META_PIXEL_ID: cole o ID numérico do Pixel (deixe vazio até ter o ID)
- *
- * Os href dos CTAs em index.html são fallback sem JavaScript.
- * Com JS ativo, o valor desta constante prevalece em todos os CTAs.
+ * CONFIGURAÇÃO:
+ * - WHATSAPP_GROUP_URL: link do grupo
+ * - Pixel do Meta: inicialização oficial em index.html (fbq init + PageView)
+ *   ID: 27974338368882893
  */
 
 const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/KGD9ZYXC1YPI0k7iVTFcGa?mode=gi_t';
-const META_PIXEL_ID = '27974338368882893';
-
-/**
- * Ponto de extensão LGPD.
- * Troque o retorno quando conectar um gerenciador de consentimento.
- * Ex.: return window.Cookiebot?.consent?.marketing === true;
- * Depois do aceite, chame initMetaPixel().
- */
-function hasTrackingConsent() {
-  return true;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Pixel: inicialização (separado da UI)                                      */
-/* -------------------------------------------------------------------------- */
-
-function initMetaPixel() {
-  if (!META_PIXEL_ID || !hasTrackingConsent()) return;
-  if (window.fbq) return;
-
-  var f = window;
-  var b = document;
-  var e = 'script';
-  var v = 'https://connect.facebook.net/en_US/fbevents.js';
-  var n;
-  var t;
-  var s;
-
-  n = f.fbq = function () {
-    n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-  };
-  if (!f._fbq) f._fbq = n;
-  n.push = n;
-  n.loaded = true;
-  n.version = '2.0';
-  n.queue = [];
-  t = b.createElement(e);
-  t.async = true;
-  t.src = v;
-  s = b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t, s);
-
-  window.fbq('init', META_PIXEL_ID);
-  window.fbq('track', 'PageView');
-}
-
-/* -------------------------------------------------------------------------- */
-/* Pixel: envio de eventos (nunca bloqueia a navegação)                       */
-/* -------------------------------------------------------------------------- */
 
 function trackEvent(name, params, custom) {
   try {
@@ -163,6 +112,5 @@ function initStickyCta() {
   }
 }
 
-initMetaPixel();
 bindWhatsAppCtas();
 initStickyCta();
