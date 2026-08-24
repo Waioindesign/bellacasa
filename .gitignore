@@ -1,0 +1,10 @@
+.DS_Store
+_tmp_crops
+.vercel
+node_modules
+
+# Referências de marca — não vão para o site
+/Logo/
+/imagens/
+/referencias/
+/LP/
