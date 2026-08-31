@@ -55,62 +55,33 @@ function onCtaClick(event) {
   trackWhatsAppClick(position);
 }
 
-function initStickyCta() {
-  var mainCta = document.getElementById('main-cta');
-  var sticky = document.getElementById('sticky-cta');
+function initCarousel() {
+  var viewport = document.getElementById('carousel-viewport');
+  var prevBtn = document.querySelector('[data-carousel-dir="-1"]');
+  var nextBtn = document.querySelector('[data-carousel-dir="1"]');
 
-  if (!mainCta || !sticky || !('IntersectionObserver' in window)) return;
+  if (!viewport || typeof EmblaCarousel !== 'function') return;
 
-  var desktopQuery = window.matchMedia('(min-width: 768px)');
-  var hasScrolled = false;
-  var mainVisible = true;
+  var embla = EmblaCarousel(viewport, {
+    loop: true,
+    align: 'start',
+    dragFree: true,
+    skipSnaps: true,
+    containScroll: 'trimSnaps'
+  });
 
-  function setStickyVisible(visible) {
-    if (desktopQuery.matches) {
-      sticky.classList.remove('is-visible');
-      sticky.setAttribute('aria-hidden', 'true');
-      sticky.setAttribute('inert', '');
-      return;
-    }
-
-    sticky.classList.toggle('is-visible', visible);
-    sticky.setAttribute('aria-hidden', visible ? 'false' : 'true');
-    if (visible) {
-      sticky.removeAttribute('inert');
-    } else {
-      sticky.setAttribute('inert', '');
-    }
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function () {
+      embla.scrollPrev();
+    });
   }
 
-  function updateSticky() {
-    setStickyVisible(hasScrolled && !mainVisible);
-  }
-
-  var observer = new IntersectionObserver(
-    function (entries) {
-      mainVisible = entries[0].isIntersecting;
-      updateSticky();
-    },
-    { threshold: 0, rootMargin: '0px' }
-  );
-
-  observer.observe(mainCta);
-
-  window.addEventListener(
-    'scroll',
-    function () {
-      hasScrolled = true;
-      updateSticky();
-    },
-    { passive: true, once: true }
-  );
-
-  if (typeof desktopQuery.addEventListener === 'function') {
-    desktopQuery.addEventListener('change', function () {
-      if (desktopQuery.matches) setStickyVisible(false);
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      embla.scrollNext();
     });
   }
 }
 
 bindWhatsAppCtas();
-initStickyCta();
+initCarousel();
